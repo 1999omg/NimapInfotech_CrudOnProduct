@@ -1,0 +1,120 @@
+﻿using CRUDUsingEF.Data;
+using CRUDUsingEF.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace CRUDUsingEF.Controllers
+{
+    public class StudentController : Controller
+    {
+        // GET: StudentController
+        private readonly ApplicationDbContext db;
+        StudentDAL studenttDAL;
+
+        public StudentController(ApplicationDbContext db)
+        {
+            this.db = db;
+            studenttDAL = new StudentDAL(db);
+        }
+
+        public ActionResult Index()
+        {
+            var list = studenttDAL.GetAllStudent();
+
+            return View(list);
+        }
+
+        // GET: StudentController/Details/5
+        public ActionResult Details(int id)
+        {
+            var std = studenttDAL.GetStudentById(id);
+            return View(std);
+        }
+
+        // GET: StudentController/Create
+        public ActionResult Create(int id)
+        {
+            var std = studenttDAL.GetStudentById(id);
+            return View(std);
+        }
+
+        // POST: StudentController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Category std)
+        {
+            try
+            {
+                int result = studenttDAL.AddStudent(std);
+                if (result == 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                    return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: StudentController/Edit/5
+        public ActionResult Edit(int id)
+        {
+            var std = studenttDAL.GetStudentById(id);
+            return View(std);
+        }
+
+        // POST: StudentController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Category std)
+        {
+            try
+            {
+                int result = studenttDAL.UpdateStudent(std);
+                if (result == 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                    return View();
+            }
+            catch
+            {
+                return View();
+            }
+
+
+        }
+
+        // GET: StudentController/Delete/5
+        public ActionResult Delete(int id)
+        {
+            var std = studenttDAL.GetStudentById(id);
+            return View(std);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        public ActionResult DeletePost(int id)
+        {
+            try
+            {
+                int result = studenttDAL.DeleteStudent(id);
+                if (result == 1)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                    return View();
+            }
+            catch
+            {
+                return View();
+            }
+        }
+    }
+}
